@@ -58,15 +58,26 @@ app.route('/articles')
 
 app.route("/articles/:articleTitle")
     .get(function(req, res){
-        const articleTitle = req.params.articleTitle;
-        Article.findOne({title: articleTitle}, function(err, foundArticles){
-            if(foundArticles){
-                res.send(foundArticles);
-            }
-            else{
-                res.send("No articles matching that title");
-            }
+        Article.findOne({title: req.params.articleTitle}, 
+            function(err, foundArticles){
+                if(foundArticles){
+                    res.send(foundArticles);
+                }
+                else{
+                    res.send("No articles matching that title");
+                }
         });
+    })
+    .put(function(req, res){
+        Article.update(
+            {title: req.params.articleTitle},
+            {title: req.body.title, content: req.body.content},
+            {overwrite: true},   
+            function(err){
+                if(!err){
+                    res.send("Successfully updated the article");
+                }
+            });
     });
 
 var port = 5501;
