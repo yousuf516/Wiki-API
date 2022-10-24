@@ -17,9 +17,42 @@ const articleSchema = {
 
 const Article = mongoose.model("Article", articleSchema);
 
-app.get("/", function(req, res){
-    res.send("Hello");
-});
+app.route('/articles')
+    .get(function(req, res){
+        Article.find(function(err, foundArticles){
+            if(err){
+                res.send(err);
+            }
+            else{
+                res.send(foundArticles);
+            }
+        });
+    })
+    .post(function(req, res){
+        const newArticle = new Article({
+            title: req.body.title,
+            content: req.body.content
+        });
+
+        newArticle.save(function(err){
+            if(err){
+                res.send(err);
+            }
+            else{
+                res.send("Successfully Added a new article");
+            }
+        });
+    })
+    .delete(function(req, res){
+        Article.deleteMany({}, function(err){
+            if(err){
+                res.send(err);
+            }
+            else{
+                res.send("Successfully Deleted all article");
+            }
+        });
+    });
 
 var port = 5501;
 app.listen(port, function() {
