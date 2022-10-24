@@ -54,6 +54,21 @@ app.route('/articles')
         });
     });
 
+// Request targeting a specific article 
+
+app.route("/articles/:articleTitle")
+    .get(function(req, res){
+        const articleTitle = req.params.articleTitle;
+        Article.findOne({title: articleTitle}, function(err, foundArticles){
+            if(foundArticles){
+                res.send(foundArticles);
+            }
+            else{
+                res.send("No articles matching that title");
+            }
+        });
+    });
+
 var port = 5501;
 app.listen(port, function() {
     console.log("Server started on port " + port + ".");
