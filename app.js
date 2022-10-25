@@ -71,14 +71,28 @@ app.route("/articles/:articleTitle")
     .put(function(req, res){
         Article.update(
             {title: req.params.articleTitle},
-            {title: req.body.title, content: req.body.content},
-            {overwrite: true},   
+            {title: req.query.title, content: req.query.content},
+            function(err){
+                if(!err){
+                res.send('Successfully updated the article "'+ req.query.title + '".' );
+                }
+            }
+        );
+    })
+    .patch(function(req, res){
+        Article.update(
+            {title: req.params.articleTitle},
+            {$set: req.query},
             function(err){
                 if(!err){
                     res.send("Successfully updated the article");
                 }
-            });
+                else{
+                    res.send(err);
+                }
+            })
     });
+    
 
 var port = 5501;
 app.listen(port, function() {
